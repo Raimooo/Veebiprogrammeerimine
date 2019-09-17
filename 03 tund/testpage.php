@@ -1,5 +1,8 @@
 <?php
 	$userName = "Raimo Pindus" ;
+	
+	$photoDir = "../photos/";
+	$photoTypes = ["image/jpeg" , "image/png"];
 	$fullTimeNow = date("d.m.Y H:i:s");
 	$hourNow = date("H");
 	$partOfDay = "hägune aeg";
@@ -26,20 +29,25 @@ if ($hourNow < 8) {
 		$semesterInfoHTML .= round($semesterElapsed -> format("%r%a") / $semesterDuration -> format("%r%a") * 100, 1) ."%";
 		$semesterInfoHTML .= "</meter> </p>";
 	}
+	//foto näitamine lehel
+	$fileList = array_slice(scandir($photoDir), 2);
+	//var_dump($fileList);
+	$photoList = [];
+	foreach ($fileList as $file){
+		$fileInfo = getImagesize($photoDir .$file);
+		if (in_array($fileInfo["mime"], $photoTypes)){
+			array_push($photoList, $file);
+		}
+	}
+	//$photoList = ["	tlu_terra_600x400_1.jpg","	tlu_terra_600x400_2.jpg",	"tlu_terra_600x400_3.jpg"];	//array ehk massiiv
+	//var_dump($photoList);
+	$photoCount = count($photoList);
+	//echo $photoCount;
+	$photoNum = mt_rand(0, $photoCount -1);
+	$randomImgHTML = '<img src="' .$photoDir .$photoList[$photoNum] . '"alt="Juhuslik foto">';
 ?>
-<!DOCTYPE html>
-<html lang="et">
-<head>
-  <meta charset="utf-8">
-  <title>
-  <?php
-  echo $userName;
-  ?>
-  Siin ma programmeerin veebi</title>
-
-</head>
-<body>
 	<?php
+	require("header.php");
 	echo "<h1>" .$userName . ", veebiprogrammeerimine </h1>";
 	
 ?>
@@ -54,9 +62,11 @@ if ($hourNow < 8) {
 		echo "<p>Lehe avamise hetkel oli aeg: " . $fullTimeNow . ", $partOfDay" . ".</p>";
 	?>
 	<h1 align="center"><img src="https://i0.wp.com/www.fluxfactory.org/wp-content/uploads/2014/05/youmadeit1.jpg" ></h1>
-	<h1 align="center"><p><font color="green" font size="15"> Kui pildid ei tööta, siis proovi homme uuesti.</h1></font></p>
+	<h1 align="center"><p><font color="blue" font size="15"> Kui pildid ei tööta, siis proovi homme uuesti.</h1></font></p>
     <p>Kui ei viitsi siin passida, siis mine passi <a href="http://greeny.cs.tlu.ee/~rainehal/Veebiprogrammeerimine/02tund/myindex.php"> mujal </a> </p>
 </script>	
-	<img src="../photos/tlu_terra_600x400_1.jpg" alt="TLÜ Terra õppehoone">
+	<?php
+	echo $randomImgHTML;
+	?>
 </body>
 </html>
