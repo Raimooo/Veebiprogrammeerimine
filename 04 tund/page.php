@@ -6,6 +6,10 @@
 	$fullTimeNow = date("d.m.Y H:i:s");
 	$hourNow = date("H");
 	$partOfDay = "hägune aeg";
+	$weekDaysET = ["E", "T", "K", "N"];
+	$weekDayToday = date("N");
+	$weekDaysET = ($weekDayToday - 1);
+	echo $weekDaysET
 
 if ($hourNow < 8) {
 	$partOfDay = "hommik";
