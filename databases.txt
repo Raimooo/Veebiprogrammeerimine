@@ -1,3 +1,18 @@
 Süsteemi kasutajate andmetabel
 
 CREATE TABLE `if19_raimo_pin_1`.`vpusers` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `firstname` VARCHAR(30) NOT NULL , `lastname` VARCHAR(30) NOT NULL , `birthdate` DATE NOT NULL , `gender` INT(1) NOT NULL , `email` VARCHAR(100) NOT NULL , `password` VARCHAR(60) NOT NULL , `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+Kasutajaprofiilid
+CREATE TABLE `if19_raimo_pin_1`.`vpuserprofiles` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `userid` INT(11) NOT NULL , `description` VARCHAR(2000) NULL , `bgcolor` VARCHAR(7) NULL , `txtcolor` VARCHAR(7) NULL , `picture` INT(11) NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+Sõnumid kõigile
+CREATE TABLE `if19_raimo_pin_1`.`vpmsg` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `userid` INT(11) NOT NULL , `message` VARCHAR(256) NOT NULL , `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `deleted` DATE NULL , `deletedby` INT(11) NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+Üles laetud piltide tabel
+CREATE TABLE `if19_raimo_pin_1`.`vpphotos` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `userid` INT(11) NOT NULL , `filename` VARCHAR(40) NOT NULL , `created` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP , `alttext` VARCHAR(256) NULL , `privacy` INT(1) NOT NULL , `deleted` DATE NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+Piltide hinnete tabel:
+CREATE TABLE `if19_raimo_pin_1`.`vpphotoratings` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `photoid` INT(11) NOT NULL , `userid` INT(11) NOT NULL , `rating` INT(1) NOT NULL , `added` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+Väljastab piltide thumbnailid koos omaniku nime ja hindega
+SELECT vpphotos.id, vpusers.firstname, vpusers.lastname, vpphotos.filename, vpphotos.alttext, AVG(vpphotoratings.rating) as AvgValue FROM vpphotos JOIN vpusers ON vpphotos.userid = vpusers.id LEFT JOIN vpphotoratings ON vpphotoratings.photoid = vpphotos.id WHERE vpphotos.privacy <= ? AND deleted IS NULL GROUP BY vpphotos.id DESC LIMIT ?, ?
