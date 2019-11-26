@@ -150,3 +150,23 @@
 		$conn->close();
 		return $picHTML;
 	}
+	function deletePic($picid, $return){
+		//echo "Kustuta: " .$picid;
+		$notice = null;
+		$conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+		$stmt = $conn->prepare("UPDATE vpphotos SET deleted = NOW() WHERE id = ?");
+		$stmt->bind_param("i", $picid);
+		echo $conn->error;
+		if($stmt->execute()){
+			$notice = "Kustutatud!";
+		} else {
+			$notice = "Kustutamisel tekkis tehniline viga: " .$stmt->error;
+		}
+		$stmt->close();
+		$conn->close();
+		if($notice == "Kustutatud!"){
+			header("Location: userpics.php?page=" .$return);
+			exit();
+		}
+		return $notice;
+	}

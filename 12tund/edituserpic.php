@@ -20,15 +20,26 @@
   
   $userName = $_SESSION["userFirstname"] ." " .$_SESSION["userLastname"];
   $picid = null;
+  $return = null;
   $notice = null;
+  $delnotice = null;
+  
+  if(isset($_POST["changeUserPicInfo"])){
+	  $notice = changePicInfo($_POST["picid"], test_input($_POST["altText"]));
+  }
+  if(isset($_POST["deleteUserPic"])){
+	  $delnotice = deletePic($_POST["picid"], $_POST["return"]);
+  }
   
   if(isset($_GET["photoid"])){
 	  //echo $_GET["photoid"];
 	  $picid = $_GET["photoid"];
 	  $userPicHTML = readuserPicToEdit($_GET["photoid"]);
+	  $return = $_GET["return"];
   } elseif(isset($_POST["picid"])){
 	  $picid = $_POST["picid"];
-	$userPicHTML = readuserPicToEdit($_POST["picid"]);
+	  $userPicHTML = readuserPicToEdit($_POST["picid"]);
+	  $return = $_POST["return"];
   } else {
 	  $userPicHTML = null;
   }
